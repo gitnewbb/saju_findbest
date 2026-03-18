@@ -1,0 +1,80 @@
+.premiumCard {
+  background: var(--surface);
+  padding: 2.5rem;
+  border-radius: 32px;
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(142, 68, 173, 0.05);
+  transition: transform 0.3s ease;
+}
+
+.formLayout {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.inputSection {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-left: 0.4rem;
+}
+
+.stylishInput, .stylishSelect {
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  border: 2px solid var(--border);
+  background: #fdfdfd;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.stylishInput:focus, .stylishSelect:focus {
+  border-color: var(--primary);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.1);
+}
+
+.premiumBtn {
+  position: relative;
+  overflow: hidden;
+  padding: 1.2rem;
+  border-radius: 18px;
+  border: none;
+  background: var(--gradient);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 10px 20px rgba(142, 68, 173, 0.2);
+}
+
+.premiumBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 30px rgba(142, 68, 173, 0.3);
+}
+
+.premiumBtn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 480px) {
+  .inputSection {
+    grid-template-columns: 1fr;
+  }
+}
