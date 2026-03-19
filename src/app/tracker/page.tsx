@@ -2,6 +2,21 @@
 import { useState } from 'react';
 import SajuForm from '@/components/SajuForm';
 
+const ZHI_TIME_MAP: Record<string, string> = {
+  '子': '23:30 ~ 01:29 (자시)',
+  '丑': '01:30 ~ 03:29 (축시)',
+  '寅': '03:30 ~ 05:29 (인시)',
+  '卯': '05:30 ~ 07:29 (묘시)',
+  '辰': '07:30 ~ 09:29 (진시)',
+  '巳': '09:30 ~ 11:29 (사시)',
+  '午': '11:30 ~ 13:29 (오시)',
+  '未': '13:30 ~ 15:29 (미시)',
+  '申': '15:30 ~ 17:29 (신시)',
+  '酉': '17:30 ~ 19:29 (유시)',
+  '戌': '19:30 ~ 21:29 (술시)',
+  '亥': '21:30 ~ 23:29 (해시)',
+};
+
 export default function TrackerPage() {
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState<any[]>([]);
@@ -126,9 +141,14 @@ export default function TrackerPage() {
       });
       const data = await response.json();
       if (data.success) {
+        // 정확한 매칭을 위해 사주 8글자(천간/지지)가 일치하는지 비교합니다.
+        // 이렇게 하면 시차 문제나 짝수 홀수 시간 오차(예: 13시 입력)에서 100% 안전합니다.
+        const targetGanStr = data.result.sajuChars.gan.join('');
+        const targetZhiStr = data.result.sajuChars.zhi.join('');
+
         const found = results.findIndex(r =>
-          new Date(r.date).toISOString().split('T')[0] === new Date(data.result.date).toISOString().split('T')[0] &&
-          new Date(r.date).getHours() === new Date(data.result.date).getHours()
+          r.sajuChars.gan.join('') === targetGanStr &&
+          r.sajuChars.zhi.join('') === targetZhiStr
         );
         setSpecResult({ ...data.result, rank: found !== -1 ? found + 1 : null });
       }
@@ -324,7 +344,8 @@ export default function TrackerPage() {
                   )}
                 </p>
                 <div style={{ marginTop: '1rem', fontSize: '0.85rem', opacity: 0.7 }}>
-                  오행 성분: {specResult.sajuChars.gan.join('')} {specResult.sajuChars.zhi.join('')}
+                  오행 성분: {specResult.sajuChars.gan.join('')} {specResult.sajuChars.zhi.join('')}<br />
+                  시간대 확인: {ZHI_TIME_MAP[specResult.sajuChars.zhi[3]] || '알 수 없음'}
                 </div>
               </div>
             )}
@@ -362,8 +383,9 @@ export default function TrackerPage() {
                         }}>{info.label}</span>
                         <span style={{ fontSize: '1.3rem', fontWeight: '800', color: 'var(--text)' }}>{new Date(item.date).getFullYear()}년생</span>
                       </div>
-                      <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: '500' }}>
-                        {new Date(item.date).toLocaleDateString('ko-KR')} | {item.sajuChars.gan.join('')} {item.sajuChars.zhi.join('')}
+                      <p style={{ color: 'var(--text-muted)', fontSize: '0.95rem', fontWeight: '500', lineHeight: '1.5' }}>
+                        {new Date(item.date).toLocaleDateString('ko-KR')} | {item.sajuChars.gan.join('')} {item.sajuChars.zhi.join('')}<br />
+                        <span style={{ fontSize: '0.85rem', opacity: 0.8 }}>시간대: {ZHI_TIME_MAP[item.sajuChars.zhi[3]] || '측정불가'}</span>
                       </p>
                     </div>
                     {item.tier === 'S' && !romanceData[idx] && (
