@@ -1,34 +1,29 @@
-/* 오방색 영감: 진홍(Burgundy), 먹색(Ink Black), 황금(Gold), 비취/청자(Jade), 한지(Hanji) */
+/* 오방색 영감: 진홍(Burgundy), 먹색(Ink Black), 황금(Gold), 비취/청자(Jade) - 다크 테마 기본 */
 :root {
-  --primary: #6c1016; /* 진홍색 (Burgundy) */
-  --primary-light: #f5f0f0; /* 한지 베이스 레드톤 */
-  --secondary: #1a1a1a; /* 먹색 (Ink Black) */
-  --accent: #d4af37; /* 호박금색 (Amber Gold) */
-  --background: #fdfcfb; /* 은은한 한지색 */
-  --surface: #ffffff;
-  --text: #2c2c2c;
-  --text-muted: #666666;
-  --border: #e6dfd8; /* 따뜻한 회갈색 (Taupe) */
-  --glass: rgba(255, 255, 255, 0.85);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 50px rgba(108, 16, 22, 0.1);
-  --gradient: linear-gradient(135deg, #6c1016 0%, #3a0005 100%);
-  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #b38b22 100%);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212; /* 깊은 먹색 */
-    --surface: #1e1e1e; /* 숯/연묵색 */
-    --text: #e6dfd8; /* 한지색상 텍스트 */
-    --text-muted: #8b8b8b;
-    --border: #333333;
-    --glass: rgba(30, 30, 30, 0.85);
-    --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.8);
-    --gradient: linear-gradient(135deg, #8b0000 0%, #4a0000 100%);
-  }
+  --primary: #9b2226;
+  /* 화사한 진홍색 */
+  --primary-light: #2c0b0e;
+  /* 아주 어두운 붉은 먹색 */
+  --secondary: #0a0a0a;
+  /* 깊은 먹색 (Ink Black) */
+  --accent: #d4af37;
+  /* 고풍스러운 호박금색 (Amber Gold) */
+  --background: #101010;
+  /* 기본 배경 먹색 */
+  --surface: #1e1e1e;
+  /* 카드/패널 배경색 */
+  --text: #e6dfd8;
+  /* 은은한 한지 질감 텍스트 색상 */
+  --text-muted: #8b8b8b;
+  /* 다크 모드용 흐린 텍스트 */
+  --border: #333333;
+  /* 다크 모드용 경계선 */
+  --glass: rgba(30, 30, 30, 0.85);
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.8);
+  --gradient: linear-gradient(135deg, #780000 0%, #4a0000 100%);
+  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #a67c00 100%);
 }
 
 * {
@@ -46,21 +41,35 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Noto Serif KR', 'Nanum Myeongjo', 'Batang', serif;
   font-weight: 700;
   letter-spacing: -0.02em;
-  color: var(--primary); /* 진홍색 매력 포인트 */
+  color: var(--primary);
+  /* 진홍색 매력 포인트 */
 }
 
 @media (prefers-color-scheme: dark) {
-  h1, h2, h3, h4, h5, h6 {
-    color: var(--accent); /* 다크모드에서는 골드빛 포인트 */
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--accent);
+    /* 다크모드에서는 골드빛 포인트 */
   }
 }
 
 .container {
-  max-width: 800px; /* 사주 정보 텍스트 집중을 위해 넓이 소폭 축소 */
+  max-width: 800px;
+  /* 사주 정보 텍스트 집중을 위해 넓이 소폭 축소 */
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -69,15 +78,21 @@ h1, h2, h3, h4, h5, h6 {
   width: 48px;
   height: 48px;
   border: 4px solid var(--border);
-  border-bottom-color: var(--accent); /* 빙글 도는 포인트를 금빛으로 */
+  border-bottom-color: var(--accent);
+  /* 빙글 도는 포인트를 금빛으로 */
   border-radius: 50%;
   display: inline-block;
   animation: rotation 1.2s cubic-bezier(0.5, 0.1, 0.4, 0.9) infinite;
 }
 
 @keyframes rotation {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .btn-primary {
@@ -85,7 +100,8 @@ h1, h2, h3, h4, h5, h6 {
   color: #fff;
   border: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem 2rem;
-  border-radius: 8px; /* 둥근 모서리 축소로 전통/단정함 강조 */
+  border-radius: 8px;
+  /* 둥근 모서리 축소로 전통/단정함 강조 */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -97,7 +113,8 @@ h1, h2, h3, h4, h5, h6 {
 .btn-primary:hover {
   transform: translateY(-2px);
   box-shadow: var(--shadow-lg);
-  border-color: var(--accent); /* 호버 시 엣지에 금빛 투영 */
+  border-color: var(--accent);
+  /* 호버 시 엣지에 금빛 투영 */
 }
 
 .resultCard {
@@ -107,7 +124,8 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-md);
   border: 1px solid var(--border);
   transition: all 0.3s ease;
-  border-top: 4px solid var(--primary); /* 상단에 포인트 컬러 */
+  border-top: 4px solid var(--primary);
+  /* 상단에 포인트 컬러 */
   margin-top: 2rem;
 }
 

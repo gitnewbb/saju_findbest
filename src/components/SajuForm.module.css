@@ -1,7 +1,8 @@
 .premiumCard {
   background: var(--surface);
   padding: 2.5rem;
-  border-radius: 12px; /* 32px -> 12px 단정하게 */
+  border-radius: 12px;
+  /* 32px -> 12px 단정하게 */
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border);
   transition: transform 0.3s ease, border-color 0.3s ease;
@@ -12,7 +13,9 @@
 .premiumCard::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
+  top: 0;
+  left: 0;
+  right: 0;
   height: 3px;
   background: var(--gold-gradient);
   border-top-left-radius: 12px;
@@ -45,9 +48,13 @@
   font-family: inherit;
 }
 
-.stylishInput, .stylishSelect {
+.stylishInput,
+.stylishSelect {
+  width: 100%;
+  max-width: 100%;
   padding: 1rem 1.2rem;
-  border-radius: 8px; /* 16px -> 8px 좀 더 각진 느낌 */
+  border-radius: 8px;
+  /* 16px -> 8px 좀 더 각진 느낌 */
   border: 1px solid var(--border);
   background: var(--background);
   color: var(--text);
@@ -56,12 +63,16 @@
   transition: all 0.3s ease;
   outline: none;
   font-family: inherit;
+  box-sizing: border-box;
 }
 
-.stylishInput:focus, .stylishSelect:focus {
-  border-color: var(--accent); /* 우아한 금빛 라인 */
+.stylishInput:focus,
+.stylishSelect:focus {
+  border-color: var(--accent);
+  /* 우아한 금빛 라인 */
   background: var(--surface);
-  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); /* 금빛 글로우 */
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+  /* 금빛 글로우 */
 }
 
 .premiumBtn {
@@ -85,7 +96,8 @@
 .premiumBtn:hover {
   transform: translateY(-2px);
   box-shadow: 0 15px 30px rgba(108, 16, 22, 0.3);
-  border-color: var(--accent); /* 마우스를 올렸을 때 금빛 엣지 */
+  border-color: var(--accent);
+  /* 마우스를 올렸을 때 금빛 엣지 */
 }
 
 .premiumBtn:active {
