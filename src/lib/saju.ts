@@ -80,24 +80,30 @@ function getSpouseElement(ilgan: string, gender: 'M' | 'F'): OhaengType | null {
 }
 
 export function getSajuFromDate(date: Date, gender?: 'M' | 'F'): SajuChar {
+  // 동현님 아이디어 적용: 
+  // 한국 표준시(KST, UTC+9)는 실제 태양시(서울 기준 약 UTC+8.5)보다 약 30분 빠릅니다.
+  // 중국 사주 라이브러리(lunar-javascript)는 00분 기준으로 지지를 넘기므로, 
+  // 입력된 시간에서 30분을 빼서 입력해주면 한국식 사주(예: 11:30~13:29 오시) 경계와 완벽히 일치합니다.
+  const correctedDate = new Date(date.getTime() - 30 * 60000);
+
   const solar = Solar.fromYmdHms(
-    date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate(),
-    date.getHours(),
-    date.getMinutes(),
-    date.getSeconds()
+    correctedDate.getFullYear(),
+    correctedDate.getMonth() + 1,
+    correctedDate.getDate(),
+    correctedDate.getHours(),
+    correctedDate.getMinutes(),
+    correctedDate.getSeconds()
   );
   const lunar = solar.getLunar();
   const baZi = lunar.getEightChar();
-  
+
   const gan = [baZi.getYearGan(), baZi.getMonthGan(), baZi.getDayGan(), baZi.getTimeGan()];
   const zhi = [baZi.getYearZhi(), baZi.getMonthZhi(), baZi.getDayZhi(), baZi.getTimeZhi()];
-  
+
   const ohaeng: Record<OhaengType, number> = { '목': 0, '화': 0, '토': 0, '금': 0, '수': 0 };
-  
-  gan.forEach(g => { if(OHAENG_MAP[g]) ohaeng[OHAENG_MAP[g]]++; });
-  zhi.forEach(z => { if(OHAENG_MAP[z]) ohaeng[OHAENG_MAP[z]]++; });
+
+  gan.forEach(g => { if (OHAENG_MAP[g]) ohaeng[OHAENG_MAP[g]]++; });
+  zhi.forEach(z => { if (OHAENG_MAP[z]) ohaeng[OHAENG_MAP[z]]++; });
 
   return { gan, zhi, ohaeng, gender };
 }
@@ -141,7 +147,7 @@ export function calculateVector(a: SajuChar, b: SajuChar, baseGender?: 'M' | 'F'
       if (a.zhi.includes(char) || b.zhi.includes(char)) matchCount++;
     });
     if (matchCount === 3 && hasA && hasB) {
-      samhap += 10; 
+      samhap += 10;
     }
   }
 
@@ -159,7 +165,7 @@ export function calculateVector(a: SajuChar, b: SajuChar, baseGender?: 'M' | 'F'
   ELEMENTS.forEach(g => {
     const countA = a.ohaeng[g] || 0;
     const countB = b.ohaeng[g] || 0;
-    
+
     if (countA === 0 && countB >= 2) johu += 5;
     if (countB === 0 && countA >= 2) johu += 5;
   });
@@ -169,7 +175,7 @@ export function calculateVector(a: SajuChar, b: SajuChar, baseGender?: 'M' | 'F'
   if (genderToUse) {
     const ilganA = a.gan[2]; // 일간(나)
     const spouseElement = getSpouseElement(ilganA, genderToUse);
-    
+
     if (spouseElement) {
       const spouseCountInB = b.ohaeng[spouseElement] || 0;
       if (spouseCountInB >= 1) {
@@ -184,7 +190,7 @@ export function calculateVector(a: SajuChar, b: SajuChar, baseGender?: 'M' | 'F'
     samhap,
     johu,
     sibseong,
-    chung: -chung, 
+    chung: -chung,
     hyeong: -hyeong,
     wonjin: -wonjin
   };

@@ -27,7 +27,7 @@ export default function TrackerPage() {
   const [topExplanation, setTopExplanation] = useState<string | null>(null);
 
   // 특정 사주 직접 검색용 스테이트
-  const [specDate, setSpecDate] = useState({ year: '1995', month: '1', day: '1', time: '12' });
+  const [specDate, setSpecDate] = useState({ year: '1995', month: '1', day: '1', time: '12', minute: '0' });
   const [specResult, setSpecResult] = useState<any>(null);
   const [specLoading, setSpecLoading] = useState(false);
 
@@ -293,11 +293,18 @@ export default function TrackerPage() {
             <h3 style={{ fontSize: '1.2rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               🔍 궁금한 인연 직접 확인
             </h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.5rem', marginBottom: '0.5rem' }}>
               <input type="number" placeholder="년" value={specDate.year} onChange={e => setSpecDate(p => ({ ...p, year: e.target.value }))} style={inputStyle} />
               <input type="number" placeholder="월" value={specDate.month} onChange={e => setSpecDate(p => ({ ...p, month: e.target.value }))} style={inputStyle} />
               <input type="number" placeholder="일" value={specDate.day} onChange={e => setSpecDate(p => ({ ...p, day: e.target.value }))} style={inputStyle} />
-              <input type="number" placeholder="시(0-23)" value={specDate.time} onChange={e => setSpecDate(p => ({ ...p, time: e.target.value }))} style={inputStyle} />
+            </div>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.5rem' }}>
+              <select value={specDate.time} onChange={e => setSpecDate(p => ({ ...p, time: e.target.value }))} style={inputStyle}>
+                {[...Array(24)].map((_, i) => <option key={`h-${i}`} value={i}>{i}시</option>)}
+              </select>
+              <select value={specDate.minute} onChange={e => setSpecDate(p => ({ ...p, minute: e.target.value }))} style={inputStyle}>
+                {[...Array(60)].map((_, i) => <option key={`m-${i}`} value={i}>{i}분</option>)}
+              </select>
             </div>
             <button
               onClick={handleSpecificSearch}

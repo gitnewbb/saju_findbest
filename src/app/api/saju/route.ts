@@ -43,8 +43,8 @@ export async function POST(req: Request) {
 
     // 3. 특정 사주 직접 검색(역추적 결과 외 조회)
     if (mode === 'specific_search' && targetSajuData) {
-      const { year, month, day, time } = targetSajuData;
-      const targetDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(time), 0, 0);
+      const { year, month, day, time, minute = '0' } = targetSajuData;
+      const targetDate = new Date(parseInt(year), parseInt(month) - 1, parseInt(day), parseInt(time), parseInt(minute), 0);
       const targetSaju = getSajuFromDate(targetDate);
       const fromSaju = getSajuFromDate(baseDate, baseGender); // Re-calculate to be safe
       const vector = calculateVector(fromSaju, targetSaju, baseGender);
@@ -59,7 +59,7 @@ export async function POST(req: Request) {
         birthTime: birthTime.toString(),
         gender: baseGender,
         mode,
-        analysis: `Specific Search for: ${year}-${month}-${day} ${time}시`
+        analysis: `Specific Search for: ${year}-${month}-${day} ${time}:${minute}`
       });
 
       return NextResponse.json({ success: true, result: { date: targetDate, sajuChars: { gan: targetSaju.gan, zhi: targetSaju.zhi }, vector } });
