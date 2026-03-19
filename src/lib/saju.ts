@@ -1,20 +1,26 @@
 import { Solar } from 'lunar-javascript';
 
+export type OhaengType = '목' | '화' | '토' | '금' | '수';
+
 export interface SajuChar {
   gan: string[];
   zhi: string[];
-  ohaeng: Record<string, number>;
+  ohaeng: Record<OhaengType, number>;
+  gender?: 'M' | 'F';
 }
 
 export interface CompatibilityVector {
-  hap: number;   // 합 (천간합, 지지육합)
-  chung: number; // 충 (천간충, 지지충)
-  hyeong: number; // 형 (삼형, 자형 등)
-  johu: number;  // 오행 조후 (서로 부족한 기운 보완 정도)
-  samhap: number; // 삼합/방합 완성 
+  hap: number;    // 합 (천간합, 지지육합)
+  banhap: number; // 반합 (왕지를 포함한 2글자 합)
+  samhap: number; // 삼합 완성 (둘이 만나 3글자가 모임)
+  johu: number;   // 오행 조후 (서로 부족한 기운 보완 및 조양조음)
+  sibseong: number; // 십성 궁합 (남:재성, 여:관성)
+  chung: number;  // 충 (천간충, 지지충) - 음수 리턴
+  hyeong: number; // 형 (삼형, 자형 등) - 음수 리턴
+  wonjin: number; // 원진살 (이유없는 갈등/미움) - 음수 리턴
 }
 
-const OHAENG_MAP: Record<string, string> = {
+const OHAENG_MAP: Record<string, OhaengType> = {
   '甲': '목', '乙': '목', '寅': '목', '卯': '목',
   '丙': '화', '丁': '화', '巳': '화', '午': '화',
   '戊': '토', '己': '토', '辰': '토', '戌': '토', '丑': '토', '未': '토',
@@ -22,25 +28,58 @@ const OHAENG_MAP: Record<string, string> = {
   '壬': '수', '癸': '수', '亥': '수', '子': '수',
 };
 
-// 합 매핑 (키 조합)
+// 상극 관계 (목극토, 화극금, 토극수, 금극목, 수극화)
+const SANGGUEK_MAP: Record<OhaengType, OhaengType> = {
+  '목': '토',
+  '화': '금',
+  '토': '수',
+  '금': '목',
+  '수': '화'
+};
+
+// 천간/지지 매핑
 const GAN_HAP = new Set(['甲己', '乙庚', '丙辛', '丁壬', '戊癸']);
 const ZHI_HAP = new Set(['子丑', '寅亥', '卯戌', '辰酉', '巳申', '午未']);
 
-// 충 매핑
 const GAN_CHUNG = new Set(['甲庚', '乙辛', '丙壬', '丁癸']);
 const ZHI_CHUNG = new Set(['子午', '丑未', '寅申', '卯酉', '辰戌', '巳亥']);
 
-// 형 매핑 (간단히 이형, 삼형 조합을 체크. 이 코드에서는 대표적인 조합 위주)
 const ZHI_HYEONG = new Set(['寅巳', '巳申', '寅申', '丑戌', '戌未', '丑未', '子卯', '辰辰', '午午', '酉酉', '亥亥']);
+const ZHI_WONJIN = new Set(['子未', '丑午', '寅酉', '卯申', '辰亥', '巳戌']);
 
-// 삼합
-const ZHI_SAMHAP = [new Set(['亥', '卯', '未']), new Set(['寅', '午', '戌']), new Set(['巳', '酉', '丑']), new Set(['申', '子', '辰'])];
+// 삼합 (3글자 세트) & 반합 (왕지 포함 2글자)
+const ZHI_SAMHAP = [
+  new Set(['亥', '卯', '未']),
+  new Set(['寅', '午', '戌']),
+  new Set(['巳', '酉', '丑']),
+  new Set(['申', '子', '辰'])
+];
+
+const ZHI_BANHAP = new Set(['亥卯', '卯未', '寅午', '午戌', '巳酉', '酉丑', '申子', '子辰']);
+
+// 자리별 가중치: 년(1), 월(2), 일(3), 시(1) -> 일주 중심의 궁합 측정
+const PILLAR_WEIGHTS = [1, 2, 3, 1];
 
 function checkPair(set: Set<string>, a: string, b: string): boolean {
   return set.has(a + b) || set.has(b + a);
 }
 
-export function getSajuFromDate(date: Date): SajuChar {
+// 일간(나)을 기준으로 십성(육친) 중 이성에 해당하는 오행을 계산
+function getSpouseElement(ilgan: string, gender: 'M' | 'F'): OhaengType | null {
+  const myOhaeng = OHAENG_MAP[ilgan];
+  if (!myOhaeng) return null;
+
+  if (gender === 'M') {
+    // 남성의 배우자(재성): 내가 극하는 오행
+    return SANGGUEK_MAP[myOhaeng];
+  } else {
+    // 여성의 배우자(관성): 나를 극하는 오행 (어떤 오행이 나를 극하는지 찾기)
+    const keys = Object.keys(SANGGUEK_MAP) as OhaengType[];
+    return keys.find((k) => SANGGUEK_MAP[k] === myOhaeng) || null;
+  }
+}
+
+export function getSajuFromDate(date: Date, gender?: 'M' | 'F'): SajuChar {
   const solar = Solar.fromYmdHms(
     date.getFullYear(),
     date.getMonth() + 1,
@@ -55,35 +94,45 @@ export function getSajuFromDate(date: Date): SajuChar {
   const gan = [baZi.getYearGan(), baZi.getMonthGan(), baZi.getDayGan(), baZi.getTimeGan()];
   const zhi = [baZi.getYearZhi(), baZi.getMonthZhi(), baZi.getDayZhi(), baZi.getTimeZhi()];
   
-  const ohaeng = { '목': 0, '화': 0, '토': 0, '금': 0, '수': 0 };
+  const ohaeng: Record<OhaengType, number> = { '목': 0, '화': 0, '토': 0, '금': 0, '수': 0 };
   
-  gan.forEach(g => { if(OHAENG_MAP[g]) ohaeng[OHAENG_MAP[g] as keyof typeof ohaeng]++; });
-  zhi.forEach(z => { if(OHAENG_MAP[z]) ohaeng[OHAENG_MAP[z] as keyof typeof ohaeng]++; });
+  gan.forEach(g => { if(OHAENG_MAP[g]) ohaeng[OHAENG_MAP[g]]++; });
+  zhi.forEach(z => { if(OHAENG_MAP[z]) ohaeng[OHAENG_MAP[z]]++; });
 
-  return { gan, zhi, ohaeng };
+  return { gan, zhi, ohaeng, gender };
 }
 
-export function calculateVector(a: SajuChar, b: SajuChar): CompatibilityVector {
-  let hap = 0, chung = 0, hyeong = 0, johu = 0, samhap = 0;
+export function calculateVector(a: SajuChar, b: SajuChar, baseGender?: 'M' | 'F'): CompatibilityVector {
+  let hap = 0, banhap = 0, samhap = 0, johu = 0, sibseong = 0, chung = 0, hyeong = 0, wonjin = 0;
 
-  // 천간 비교 (일방적으로 페널티를 주거나 보너스를 주는 형태이나, 섞일 경우를 위해 단순 카운트 후 파레토 최적화에 사용)
-  for (const gA of a.gan) {
-    for (const gB of b.gan) {
-      if (checkPair(GAN_HAP, gA, gB)) hap++;
-      if (checkPair(GAN_CHUNG, gA, gB)) chung++;
+  // 1. 천간 비교
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      const gA = a.gan[i];
+      const gB = b.gan[j];
+      const weight = PILLAR_WEIGHTS[i] * PILLAR_WEIGHTS[j];
+
+      if (checkPair(GAN_HAP, gA, gB)) hap += weight;
+      if (checkPair(GAN_CHUNG, gA, gB)) chung += weight;
     }
   }
 
-  // 지지 비교
-  for (const zA of a.zhi) {
-    for (const zB of b.zhi) {
-      if (checkPair(ZHI_HAP, zA, zB)) hap++;
-      if (checkPair(ZHI_CHUNG, zA, zB)) chung++;
-      if (checkPair(ZHI_HYEONG, zA, zB)) hyeong++;
+  // 2. 지지 비교
+  for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+      const zA = a.zhi[i];
+      const zB = b.zhi[j];
+      const weight = PILLAR_WEIGHTS[i] * PILLAR_WEIGHTS[j];
+
+      if (checkPair(ZHI_HAP, zA, zB)) hap += weight;
+      if (checkPair(ZHI_BANHAP, zA, zB)) banhap += weight * 0.5;
+      if (checkPair(ZHI_CHUNG, zA, zB)) chung += weight;
+      if (checkPair(ZHI_HYEONG, zA, zB)) hyeong += weight;
+      if (checkPair(ZHI_WONJIN, zA, zB)) wonjin += weight;
     }
   }
 
-  // 삼합 완성 감지: 각각 하나씩 가지고 있어 둘이 만나 삼합/반합을 이룰 때
+  // 3. 삼합 완성 감지
   for (const sh of ZHI_SAMHAP) {
     let hasA = false; let hasB = false; let matchCount = 0;
     sh.forEach(char => {
@@ -91,24 +140,52 @@ export function calculateVector(a: SajuChar, b: SajuChar): CompatibilityVector {
       if (b.zhi.includes(char)) hasB = true;
       if (a.zhi.includes(char) || b.zhi.includes(char)) matchCount++;
     });
-    // 상대방과 합쳐서 비로소 3개가 모였을 때 큰 점수 부여
     if (matchCount === 3 && hasA && hasB) {
-      samhap++;
+      samhap += 10; 
     }
   }
 
-  // 조후(오행 보완): A에게 0개인 오행을 B가 2개 이상 가지고 있으면 시너지 발생
-  Object.keys(a.ohaeng).forEach(g => {
-    if (a.ohaeng[g] === 0 && b.ohaeng[g] >= 2) johu++;
-    if (b.ohaeng[g] === 0 && a.ohaeng[g] >= 2) johu++;
+  // 4. 조후(오행 보완) 및 음양 보완 러프하게 적용
+  const ELEMENTS: OhaengType[] = ['목', '화', '토', '금', '수'];
+  let sumYangA = a.ohaeng['목'] + a.ohaeng['화'];
+  let sumYinA = a.ohaeng['금'] + a.ohaeng['수'];
+  let sumYangB = b.ohaeng['목'] + b.ohaeng['화'];
+  let sumYinB = b.ohaeng['금'] + b.ohaeng['수'];
+
+  if ((sumYangA > sumYinA && sumYinB > sumYangB) || (sumYinA > sumYangA && sumYangB > sumYinB)) {
+    johu += 3;
+  }
+
+  ELEMENTS.forEach(g => {
+    const countA = a.ohaeng[g] || 0;
+    const countB = b.ohaeng[g] || 0;
+    
+    if (countA === 0 && countB >= 2) johu += 5;
+    if (countB === 0 && countA >= 2) johu += 5;
   });
 
-  // 충, 형은 페널티 지표이므로 파레토 최적화 시 Maximize를 위해 음수로 전달
+  // 5. 십성 궁합 (남: 재성, 여: 관성)
+  const genderToUse = baseGender || a.gender;
+  if (genderToUse) {
+    const ilganA = a.gan[2]; // 일간(나)
+    const spouseElement = getSpouseElement(ilganA, genderToUse);
+    
+    if (spouseElement) {
+      const spouseCountInB = b.ohaeng[spouseElement] || 0;
+      if (spouseCountInB >= 1) {
+        sibseong += (spouseCountInB * 4);
+      }
+    }
+  }
+
   return {
     hap,
+    banhap,
+    samhap,
+    johu,
+    sibseong,
     chung: -chung, 
     hyeong: -hyeong,
-    johu,
-    samhap
+    wonjin: -wonjin
   };
 }

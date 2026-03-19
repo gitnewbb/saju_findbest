@@ -1,10 +1,22 @@
 .premiumCard {
   background: var(--surface);
   padding: 2.5rem;
-  border-radius: 32px;
+  border-radius: 12px; /* 32px -> 12px 단정하게 */
   box-shadow: var(--shadow-lg);
-  border: 1px solid rgba(142, 68, 173, 0.05);
-  transition: transform 0.3s ease;
+  border: 1px solid var(--border);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+/* 약간의 오리엔탈 라인 포인트 */
+.premiumCard::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gold-gradient);
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
 .formLayout {
@@ -26,47 +38,54 @@
 }
 
 .label {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   font-weight: 600;
-  color: var(--text-muted);
-  margin-left: 0.4rem;
+  color: var(--text);
+  margin-left: 0.2rem;
+  font-family: inherit;
 }
 
 .stylishInput, .stylishSelect {
   padding: 1rem 1.2rem;
-  border-radius: 16px;
-  border: 2px solid var(--border);
-  background: #fdfdfd;
+  border-radius: 8px; /* 16px -> 8px 좀 더 각진 느낌 */
+  border: 1px solid var(--border);
+  background: var(--background);
+  color: var(--text);
   font-size: 1rem;
   font-weight: 500;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
   outline: none;
+  font-family: inherit;
 }
 
 .stylishInput:focus, .stylishSelect:focus {
-  border-color: var(--primary);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(142, 68, 173, 0.1);
+  border-color: var(--accent); /* 우아한 금빛 라인 */
+  background: var(--surface);
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15); /* 금빛 글로우 */
 }
 
 .premiumBtn {
   position: relative;
   overflow: hidden;
   padding: 1.2rem;
-  border-radius: 18px;
-  border: none;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   background: var(--gradient);
   color: #fff;
-  font-size: 1.1rem;
-  font-weight: 700;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 10px 20px rgba(142, 68, 173, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 10px 20px rgba(108, 16, 22, 0.2);
+  margin-top: 1rem;
+  font-family: inherit;
 }
 
 .premiumBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(142, 68, 173, 0.3);
+  box-shadow: 0 15px 30px rgba(108, 16, 22, 0.3);
+  border-color: var(--accent); /* 마우스를 올렸을 때 금빛 엣지 */
 }
 
 .premiumBtn:active {

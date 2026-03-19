@@ -48,7 +48,12 @@ export default function SajuForm({ onSubmit, buttonText = "운명 찾기" }: Pro
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit(formData);
+    // 성별 데이터 연동 통일: male/female을 M/F로 매핑
+    const payload = {
+      ...formData,
+      baseGender: formData.gender === 'male' ? 'M' : 'F'
+    };
+    onSubmit(payload);
   };
 
   return (
