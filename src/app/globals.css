@@ -1,28 +1,35 @@
 /* 오방색 영감: 진홍(Burgundy), 먹색(Ink Black), 황금(Gold), 비취/청자(Jade) - 다크 테마 기본 */
 :root {
   --primary: #9b2226;
+  /* 진홍색 */
   /* 화사한 진홍색 */
   --primary-light: #2c0b0e;
   /* 아주 어두운 붉은 먹색 */
-  --secondary: #0a0a0a;
+  --secondary: #0f0c29;
+  /* 신비로운 딥 블루 (Midnight Blue) */
   /* 깊은 먹색 (Ink Black) */
   --accent: #d4af37;
+  /* 호박금색 (Amber Gold) */
   /* 고풍스러운 호박금색 (Amber Gold) */
-  --background: #101010;
+  --background: #0a0b1e;
+  /* 신비로운 우주 느낌의 어두운 남색 */
   /* 기본 배경 먹색 */
-  --surface: #1e1e1e;
+  --surface: #161b33;
+  /* 조금 더 푸른빛이 도는 패널 색상 */
   /* 카드/패널 배경색 */
   --text: #e6dfd8;
   /* 은은한 한지 질감 텍스트 색상 */
   --text-muted: #8b8b8b;
   /* 다크 모드용 흐린 텍스트 */
-  --border: #333333;
+  --border: #2a2d45;
+  /* 경계선도 푸른빛으로 통일 */
   /* 다크 모드용 경계선 */
-  --glass: rgba(30, 30, 30, 0.85);
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 10px 25px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.8);
-  --gradient: linear-gradient(135deg, #780000 0%, #4a0000 100%);
+  --glass: rgba(22, 27, 51, 0.85);
+  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.7);
+  --gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  /* 우주 그라데이션 */
   --gold-gradient: linear-gradient(135deg, #d4af37 0%, #a67c00 100%);
 }
 

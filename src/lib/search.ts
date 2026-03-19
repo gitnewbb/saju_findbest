@@ -8,8 +8,14 @@ import { SajuResult, rankParetoFronts } from './pareto';
 export function searchSajuSpace(baseDate: Date, targetChars: SajuChar, baseGender?: 'M' | 'F', nYears: number = 2): SajuResult[] {
   const candidates: SajuResult[] = [];
 
-  const startTime = baseDate.getTime() - nYears * 365 * 24 * 60 * 60 * 1000;
-  const endTime = baseDate.getTime() + nYears * 365 * 24 * 60 * 60 * 1000;
+  const baseYear = baseDate.getFullYear();
+  const startTime = new Date(baseDate);
+  startTime.setFullYear(baseYear - nYears, 0, 1); // 시작 연도 1월 1일
+  startTime.setHours(0, 0, 0, 0);
+
+  const endTime = new Date(baseDate);
+  endTime.setFullYear(baseYear + nYears, 11, 31); // 종료 연도 12월 31일
+  endTime.setHours(23, 59, 59, 999);
 
   const current = new Date(startTime);
 
@@ -17,7 +23,7 @@ export function searchSajuSpace(baseDate: Date, targetChars: SajuChar, baseGende
   // 각 십이지시의 중간 값을 사용한다고 가정 (예: 자시 00:00, 축시 02:00, 인시 04:00 ...)
   const timeOffsets = [0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22];
 
-  while (current.getTime() <= endTime) {
+  while (current.getTime() <= endTime.getTime()) {
     for (const h of timeOffsets) {
       const targetDate = new Date(current);
       targetDate.setHours(h, 0, 0, 0);
@@ -40,10 +46,18 @@ export function searchSajuSpace(baseDate: Date, targetChars: SajuChar, baseGende
 
 export function generateSajuTiers(baseDate: Date, baseGender?: 'M' | 'F', rangeYears: number = 2): SajuResult[] {
   const baseSaju = getSajuFromDate(baseDate, baseGender);
-  const candidates = searchSajuSpace(baseDate, baseSaju, baseGender, rangeYears);
+  let candidates = searchSajuSpace(baseDate, baseSaju, baseGender, rangeYears);
 
-  // 파레토 티어 도출
-  const fronts = rankParetoFronts(candidates, 4); // S, A, B, C 계층까지만 계산
+  // 성능 최적화: 파레토 랭킹(O(N^2)) 이전에 점수 합계로 상위 N개만 필터링
+  // 전체 2만여개를 모두 비교하면 서버 과부하가 걸릴 수 있으므로, 
+  // 최소한의 가능성이 있는 상위 1500개 정도만 파레토 검증에 투입합니다.
+  const getSum = (v: any) => (v.hap || 0) + (v.banhap || 0) + (v.samhap || 0) + (v.johu || 0) + (v.sibseong || 0) + (v.chung || 0) + (v.hyeong || 0) + (v.wonjin || 0);
+
+  candidates.sort((a, b) => getSum(b.vector) - getSum(a.vector));
+  const topCandidates = candidates.slice(0, 1500);
+
+  // 파레토 티어 도출 (상위 후보군 대상)
+  const fronts = rankParetoFronts(topCandidates, 4);
   const tierLabels: ('S' | 'A' | 'B' | 'C')[] = ['S', 'A', 'B', 'C'];
 
   let resultPool: SajuResult[] = [];

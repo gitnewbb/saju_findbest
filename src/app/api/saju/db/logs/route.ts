@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
-import { Pool } from 'pg';
+import pool from '@/lib/db';
 
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL,
-    ssl: { rejectUnauthorized: false }
-});
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
@@ -12,11 +9,14 @@ export async function GET() {
         try {
             const result = await client.query('SELECT * FROM saju_logs ORDER BY created_at DESC LIMIT 200');
             return NextResponse.json({ success: true, logs: result.rows });
+        } catch (queryErr: any) {
+            console.error('Query Error (Table might not exist):', queryErr);
+            return NextResponse.json({ success: false, error: 'Database table missing or query failed.' }, { status: 500 });
         } finally {
             client.release();
         }
     } catch (err: any) {
-        console.error('Failed to fetch logs:', err);
+        console.error('Connection Error:', err);
         return NextResponse.json({ success: false, error: err.message }, { status: 500 });
     }
 }

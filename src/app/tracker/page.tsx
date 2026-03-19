@@ -146,7 +146,7 @@ export default function TrackerPage() {
       {results.length > 0 && !loading && (
         <div style={{ width: '100%', maxWidth: '650px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
 
-          {/* 총평 장표 (운명 브리핑) */}
+          {/* 한눈에 보는 운명 리포트 */}
           {summary && (
             <div style={{
               background: 'var(--gradient)',
@@ -155,57 +155,67 @@ export default function TrackerPage() {
               color: '#fff',
               boxShadow: 'var(--shadow-lg)',
               textAlign: 'center',
-              marginBottom: '1rem'
+              marginBottom: '1rem',
+              border: '1px solid rgba(255,255,255,0.1)'
             }}>
-              <h4 style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '0.8rem', fontWeight: '800', letterSpacing: '2px' }}>DESTINY BRIEFING</h4>
-              <p style={{ fontSize: '1.5rem', fontWeight: '900', lineHeight: '1.5', marginBottom: '1.5rem' }}>
-                당신과 가장 인연이 깊은 사람은<br />
-                <span style={{ fontSize: '1.9rem', color: '#ffd700' }}>{summary.bestYear}년 {summary.bestSeason}</span>에 태어난 사람입니다.
+              <h4 style={{ fontSize: '0.85rem', opacity: 0.8, marginBottom: '1.2rem', fontWeight: '800', letterSpacing: '3px', color: 'var(--accent)' }}>DESTINY REPORT</h4>
+              <p style={{ fontSize: '1.5rem', fontWeight: '900', lineHeight: '1.5', marginBottom: '2rem' }}>
+                당신의 최고의 인연은<br />
+                <span style={{ fontSize: '2rem', color: '#ffd700', textShadow: '0 0 20px rgba(255,215,0,0.4)' }}>{summary.bestYear}년 {summary.bestSeason}</span>생입니다.
               </p>
 
               {/* 브리핑 대시보드 */}
               <div style={{
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
-                gap: '1rem',
-                backgroundColor: 'rgba(0,0,0,0.2)',
-                padding: '1.2rem',
-                borderRadius: '18px',
+                gap: '1.2rem',
+                backgroundColor: 'rgba(0,0,0,0.3)',
+                padding: '1.5rem',
+                borderRadius: '20px',
                 textAlign: 'left',
-                fontSize: '0.95rem'
+                fontSize: '0.95rem',
+                border: '1px solid rgba(255,255,255,0.05)'
               }}>
-                <div>
-                  <span style={{ opacity: 0.7, fontSize: '0.8rem' }}>💎 최적의 시기</span>
-                  <div style={{ fontWeight: '700' }}>{summary.bestYear}년 {summary.bestSeason}</div>
+                <div style={{ padding: '0.5rem' }}>
+                  <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>최적의 시기</div>
+                  <div style={{ fontWeight: '800', color: 'var(--accent)' }}>{summary.bestYear}년 {summary.bestSeason}</div>
                 </div>
-                <div>
-                  <span style={{ opacity: 0.7, fontSize: '0.8rem' }}>⚠️ 거리둘 시기</span>
-                  <div style={{ fontWeight: '700' }}>{summary.worstYear}년생 주변</div>
+                <div style={{ padding: '0.5rem' }}>
+                  <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>주의할 시기</div>
+                  <div style={{ fontWeight: '800', color: '#ff6b6b' }}>{summary.worstYear}년생 주변</div>
                 </div>
-                <div>
-                  <span style={{ opacity: 0.7, fontSize: '0.8rem' }}>📊 발견된 빈도</span>
-                  <div style={{ fontWeight: '700' }}>{summary.mostFreqYear}년생 다수 분포</div>
+                <div style={{ padding: '0.5rem' }}>
+                  <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>인연 밀집 연도</div>
+                  <div style={{ fontWeight: '800' }}>{summary.mostFreqYear}년생 검색됨</div>
                 </div>
-                <div>
-                  <span style={{ opacity: 0.7, fontSize: '0.8rem' }}>✨ 상위권 비율</span>
-                  <div style={{ fontWeight: '700' }}>천생연분 {summary.sCount}명</div>
+                <div style={{ padding: '0.5rem' }}>
+                  <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>천생연분 빈도</div>
+                  <div style={{ fontWeight: '800' }}>상위 {summary.sCount}명 탐지</div>
                 </div>
               </div>
 
-              <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: '12px', fontSize: '0.9rem', fontStyle: 'italic' }}>
-                💡 {summary.insight}
+              <div style={{
+                marginTop: '1.5rem',
+                padding: '1.2rem',
+                backgroundColor: 'rgba(255,255,255,0.03)',
+                borderRadius: '15px',
+                fontSize: '0.92rem',
+                lineHeight: '1.6',
+                borderLeft: '4px solid var(--accent)'
+              }}>
+                <span style={{ fontWeight: '800', color: 'var(--accent)', marginRight: '0.5rem' }}>핵심 통찰:</span>
+                {summary.insight}
               </div>
 
               {topExplanation && (
                 <div style={{
-                  marginTop: '1.5rem',
-                  paddingTop: '1.5rem',
-                  borderTop: '1px solid rgba(255,255,255,0.2)',
+                  marginTop: '2rem',
+                  paddingTop: '2rem',
+                  borderTop: '1px solid rgba(255,255,255,0.1)',
                   fontSize: '1.05rem',
-                  lineHeight: '1.7',
+                  lineHeight: '1.8',
                   textAlign: 'left',
-                  fontWeight: '400',
-                  color: '#fff',
+                  color: 'rgba(255,255,255,0.95)',
                   whiteSpace: 'pre-wrap'
                 }}>
                   {topExplanation}

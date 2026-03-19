@@ -6,10 +6,19 @@ export default function DbCheckPage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch('/api/db/logs')
+        fetch('/api/db/logs', { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
-                if (data.success) setLogs(data.logs);
+                if (data.success) {
+                    setLogs(data.logs);
+                } else {
+                    console.error('API Error:', data.error);
+                    alert('로그를 불러오지 못했습니다. DB 초기화 여부를 확인해주세요.');
+                }
+            })
+            .catch(err => {
+                console.error('Network Error:', err);
+                alert('서버와 연결할 수 없습니다.');
             })
             .finally(() => setLoading(false));
     }, []);
