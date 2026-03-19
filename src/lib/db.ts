@@ -2,13 +2,18 @@ import { Pool } from 'pg';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+if (!process.env.DATABASE_URL) {
+    console.warn('⚠️ DATABASE_URL is missing in environment variables.');
+}
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_URL?.includes('localhost')
         ? false
         : {
             rejectUnauthorized: false, // For Aiven/Render production DB
-        }
+        },
+    connectionTimeoutMillis: 5000, // 5 second timeout to avoid hanging
 });
 
 /**

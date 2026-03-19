@@ -17,6 +17,11 @@ export async function GET() {
         }
     } catch (err: any) {
         console.error('Connection Error:', err);
-        return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+        return NextResponse.json({
+            success: false,
+            error: 'Database connection failed.',
+            details: err.message,
+            hint: 'Please check your DATABASE_URL in Render environment variables.'
+        }, { status: 500 });
     }
 }
