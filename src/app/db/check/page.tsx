@@ -24,11 +24,11 @@ export default function DbCheckPage() {
     }, []);
 
     return (
-        <main style={{ padding: '3rem', backgroundColor: '#101010', minHeight: '100vh', color: '#e6dfd8', fontFamily: 'serif' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid #333', paddingBottom: '1rem' }}>
-                <h1 style={{ color: '#d4af37', margin: 0 }}>📜 시스템 운명 로그 (최근 200건)</h1>
+        <main style={{ padding: '3rem', backgroundColor: 'var(--background)', minHeight: '100vh', color: 'var(--text)', fontFamily: 'serif' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid var(--border)', paddingBottom: '1rem' }}>
+                <h1 style={{ color: 'var(--primary)', margin: 0 }}>📜 시스템 운명 로그 (최근 200건)</h1>
                 <div style={{ textAlign: 'right' }}>
-                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#ffd700' }}>총 {logs.length}건 조회됨</div>
+                    <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent)' }}>총 {logs.length}건 조회됨</div>
                     <div style={{ fontSize: '0.8rem', opacity: 0.6 }}>Aiven Cloud DB 연동 중</div>
                 </div>
             </div>
@@ -36,10 +36,10 @@ export default function DbCheckPage() {
             {loading ? (
                 <p>기록을 불러오는 중...</p>
             ) : (
-                <div style={{ overflowX: 'auto', backgroundColor: '#1e1e1e', borderRadius: '12px', padding: '1rem', border: '1px solid #333' }}>
+                <div style={{ overflowX: 'auto', backgroundColor: 'var(--surface)', borderRadius: '12px', padding: '1rem', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
                     <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
                         <thead>
-                            <tr style={{ backgroundColor: '#1e1e1e', color: '#d4af37' }}>
+                            <tr style={{ backgroundColor: 'var(--surface)', color: 'var(--primary)', borderBottom: '2px solid var(--border)' }}>
                                 <th style={thStyle}>ID</th>
                                 <th style={thStyle}>접속 IP</th>
                                 <th style={thStyle}>기준 사주 (생년월일시/성별)</th>
@@ -50,7 +50,7 @@ export default function DbCheckPage() {
                         </thead>
                         <tbody>
                             {logs.map(log => (
-                                <tr key={log.id} style={{ borderBottom: '1px solid #333' }}>
+                                <tr key={log.id} style={{ borderBottom: '1px solid var(--border)' }}>
                                     <td style={tdStyle}>{log.id}</td>
                                     <td style={tdStyle}>{log.user_ip}</td>
                                     <td style={tdStyle}>
@@ -71,5 +71,5 @@ export default function DbCheckPage() {
     );
 }
 
-const thStyle = { padding: '12px', textAlign: 'left' as const, borderBottom: '2px solid #333' };
+const thStyle = { padding: '12px', textAlign: 'left' as const, borderBottom: 'none' };
 const tdStyle = { padding: '12px', textAlign: 'left' as const };

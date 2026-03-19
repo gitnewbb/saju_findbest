@@ -1,36 +1,29 @@
 /* 오방색 영감: 진홍(Burgundy), 먹색(Ink Black), 황금(Gold), 비취/청자(Jade) - 다크 테마 기본 */
 :root {
-  --primary: #9b2226;
-  /* 진홍색 */
-  /* 화사한 진홍색 */
-  --primary-light: #2c0b0e;
-  /* 아주 어두운 붉은 먹색 */
-  --secondary: #0f0c29;
-  /* 신비로운 딥 블루 (Midnight Blue) */
-  /* 깊은 먹색 (Ink Black) */
-  --accent: #d4af37;
-  /* 호박금색 (Amber Gold) */
-  /* 고풍스러운 호박금색 (Amber Gold) */
-  --background: #0a0b1e;
-  /* 신비로운 우주 느낌의 어두운 남색 */
-  /* 기본 배경 먹색 */
-  --surface: #161b33;
-  /* 조금 더 푸른빛이 도는 패널 색상 */
-  /* 카드/패널 배경색 */
-  --text: #e6dfd8;
-  /* 은은한 한지 질감 텍스트 색상 */
-  --text-muted: #8b8b8b;
-  /* 다크 모드용 흐린 텍스트 */
-  --border: #2a2d45;
-  /* 경계선도 푸른빛으로 통일 */
-  /* 다크 모드용 경계선 */
-  --glass: rgba(22, 27, 51, 0.85);
-  --shadow-sm: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 8px 16px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 16px 32px rgba(0, 0, 0, 0.7);
-  --gradient: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
-  /* 우주 그라데이션 */
-  --gold-gradient: linear-gradient(135deg, #d4af37 0%, #a67c00 100%);
+  /* 한지(Hanji) 다자인 시스템 - 밝고 고풍스러운 한국 전통 배색 */
+  --primary: #a33b3b;
+  /* 홍다색 (차분하고 우아한 붉은빛) */
+  --primary-light: #d8b4b4;
+  --secondary: #e6dfd8;
+  /* 한지색 (따뜻한 아이보리) */
+  --accent: #5b8c85;
+  /* 고려청자/비취색 (Jade Green) */
+  --background: #f9f6f0;
+  /* 밝은 한지 바탕 */
+  --surface: #ffffff;
+  /* 깨끗한 백자색(카드 배경) */
+  --text: #2a2321;
+  /* 먹색 (깊은 갈흑색) */
+  --text-muted: #6b635e;
+  /* 흐린 먹색 */
+  --border: #e2d7c8;
+  /* 고동색 섞인 부드러운 경계선 */
+  --glass: rgba(255, 255, 255, 0.9);
+  --shadow-sm: 0 4px 6px rgba(42, 35, 33, 0.05);
+  --shadow-md: 0 8px 16px rgba(42, 35, 33, 0.1);
+  --shadow-lg: 0 16px 32px rgba(42, 35, 33, 0.15);
+  --gradient: linear-gradient(135deg, #fdfbf7 0%, #f4ece3 100%);
+  --gold-gradient: linear-gradient(135deg, #c79e53 0%, #a67c00 100%);
 }
 
 * {

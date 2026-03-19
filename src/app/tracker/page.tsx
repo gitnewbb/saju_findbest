@@ -107,16 +107,16 @@ export default function TrackerPage() {
 
   const getTierInfo = (tier: string) => {
     switch (tier) {
-      case 'S': return { color: '#e0b0ff', label: '천생연분', bg: 'rgba(142,68,173,0.3)' };
-      case 'A': return { color: '#85c1e9', label: '찰떡궁합', bg: 'rgba(41,128,185,0.3)' };
-      case 'B': return { color: '#82e0aa', label: '좋은인연', bg: 'rgba(39,174,96,0.3)' };
-      case 'C': return { color: '#f8c471', label: '무난한합', bg: 'rgba(243,156,18,0.3)' };
-      default: return { color: '#bdc3c7', label: '기타인연', bg: 'rgba(127,140,141,0.3)' };
+      case 'S': return { color: '#8b5a8c', label: '천생연분', bg: 'rgba(139,90,140,0.15)' }; // 자색(자주)
+      case 'A': return { color: '#5b8c85', label: '찰떡궁합', bg: 'rgba(91,140,133,0.15)' }; // 비취색
+      case 'B': return { color: '#3d6342', label: '좋은인연', bg: 'rgba(61,99,66,0.15)' }; // 국방/진록
+      case 'C': return { color: '#a36b3b', label: '무난한합', bg: 'rgba(163,107,59,0.15)' }; // 황토/고동
+      default: return { color: '#6b635e', label: '기타인연', bg: 'rgba(107,99,94,0.15)' };
     }
   };
 
   return (
-    <main className="container" style={{ paddingTop: '5rem', background: 'radial-gradient(circle at top right, #1a1a1a, #0a0a0a)', minHeight: '100vh' }}>
+    <main className="container" style={{ paddingTop: '5rem', background: 'radial-gradient(circle at top right, #fdfbf7, #f4ece3)', minHeight: '100vh' }}>
       <div style={{ textAlign: 'center', maxWidth: '800px', margin: '0 auto 4rem' }}>
         <h1 style={{
           fontSize: '3.2rem',
@@ -152,16 +152,16 @@ export default function TrackerPage() {
               background: 'var(--gradient)',
               borderRadius: '28px',
               padding: '2.5rem',
-              color: '#fff',
+              color: 'var(--text)',
               boxShadow: 'var(--shadow-lg)',
               textAlign: 'center',
               marginBottom: '1rem',
-              border: '1px solid rgba(255,255,255,0.1)'
+              border: '1px solid var(--border)'
             }}>
               <h4 style={{ fontSize: '0.85rem', opacity: 0.8, marginBottom: '1.2rem', fontWeight: '800', letterSpacing: '3px', color: 'var(--accent)' }}>DESTINY REPORT</h4>
               <p style={{ fontSize: '1.5rem', fontWeight: '900', lineHeight: '1.5', marginBottom: '2rem' }}>
                 당신의 최고의 인연은<br />
-                <span style={{ fontSize: '2rem', color: '#ffd700', textShadow: '0 0 20px rgba(255,215,0,0.4)' }}>{summary.bestYear}년 {summary.bestSeason}</span>생입니다.
+                <span style={{ fontSize: '2rem', color: 'var(--primary)', textShadow: '0 0 10px rgba(163,59,59,0.1)' }}>{summary.bestYear}년 {summary.bestSeason}</span>생입니다.
               </p>
 
               {/* 브리핑 대시보드 */}
@@ -169,20 +169,20 @@ export default function TrackerPage() {
                 display: 'grid',
                 gridTemplateColumns: 'repeat(2, 1fr)',
                 gap: '1.2rem',
-                backgroundColor: 'rgba(0,0,0,0.3)',
+                backgroundColor: 'rgba(255, 255, 255, 0.6)',
                 padding: '1.5rem',
                 borderRadius: '20px',
                 textAlign: 'left',
                 fontSize: '0.95rem',
-                border: '1px solid rgba(255,255,255,0.05)'
+                border: '1px solid var(--border)'
               }}>
                 <div style={{ padding: '0.5rem' }}>
-                  <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>최적의 시기</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.3rem' }}>최적의 시기</div>
                   <div style={{ fontWeight: '800', color: 'var(--accent)' }}>{summary.bestYear}년 {summary.bestSeason}</div>
                 </div>
                 <div style={{ padding: '0.5rem' }}>
-                  <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>주의할 시기</div>
-                  <div style={{ fontWeight: '800', color: '#ff6b6b' }}>{summary.worstYear}년생 주변</div>
+                  <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', marginBottom: '0.3rem' }}>주의할 시기</div>
+                  <div style={{ fontWeight: '800', color: 'var(--primary)' }}>{summary.worstYear}년생 주변</div>
                 </div>
                 <div style={{ padding: '0.5rem' }}>
                   <div style={{ opacity: 0.6, fontSize: '0.75rem', marginBottom: '0.3rem' }}>인연 밀집 연도</div>
@@ -197,11 +197,12 @@ export default function TrackerPage() {
               <div style={{
                 marginTop: '1.5rem',
                 padding: '1.2rem',
-                backgroundColor: 'rgba(255,255,255,0.03)',
+                backgroundColor: 'var(--surface)',
                 borderRadius: '15px',
                 fontSize: '0.92rem',
                 lineHeight: '1.6',
-                borderLeft: '4px solid var(--accent)'
+                borderLeft: '4px solid var(--accent)',
+                boxShadow: 'var(--shadow-sm)'
               }}>
                 <span style={{ fontWeight: '800', color: 'var(--accent)', marginRight: '0.5rem' }}>핵심 통찰:</span>
                 {summary.insight}
@@ -211,11 +212,11 @@ export default function TrackerPage() {
                 <div style={{
                   marginTop: '2rem',
                   paddingTop: '2rem',
-                  borderTop: '1px solid rgba(255,255,255,0.1)',
+                  borderTop: '1px solid var(--border)',
                   fontSize: '1.05rem',
                   lineHeight: '1.8',
                   textAlign: 'left',
-                  color: 'rgba(255,255,255,0.95)',
+                  color: 'var(--text)',
                   whiteSpace: 'pre-wrap'
                 }}>
                   {topExplanation}

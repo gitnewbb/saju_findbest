@@ -80,24 +80,23 @@
   overflow: hidden;
   padding: 1.2rem;
   border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.05);
   background: var(--gradient);
-  color: #fff;
+  color: var(--text);
   font-size: 1.15rem;
-  font-weight: 600;
+  font-weight: 700;
   letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-  box-shadow: 0 10px 20px rgba(108, 16, 22, 0.2);
+  box-shadow: 0 4px 10px rgba(163, 59, 59, 0.15);
   margin-top: 1rem;
   font-family: inherit;
 }
 
 .premiumBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 15px 30px rgba(108, 16, 22, 0.3);
+  box-shadow: 0 8px 20px rgba(163, 59, 59, 0.25);
   border-color: var(--accent);
-  /* 마우스를 올렸을 때 금빛 엣지 */
 }
 
 .premiumBtn:active {
