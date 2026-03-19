@@ -6,14 +6,42 @@ if (!process.env.DATABASE_URL) {
     console.warn('⚠️ DATABASE_URL is missing in environment variables.');
 }
 
+const aivenCa = `-----BEGIN CERTIFICATE-----
+MIIETTCCArWgAwIBAgIUDSFYGNyFWhC93UsAOy7QOGEA2bYwDQYJKoZIhvcNAQEM
+BQAwQDE+MDwGA1UEAww1ZmQyMTVjZDMtMDg5Yy00NjhiLTg3MzQtNTRjNDFkZjBm
+MzI5IEdFTiAxIFByb2plY3QgQ0EwHhcNMjUwMzI1MDMxODQ4WhcNMzUwMzIzMDMx
+ODQ4WjBAMT4wPAYDVQQDDDVmZDIxNWNkMy0wODljLTQ2OGItODczNC01NGM0MWRm
+MGYzMjkgR0VOIDEgUHJvamVjdCBDQTCCAaIwDQYJKoZIhvcNAQEBBQADggGPADCC
+AYoCggGBAJXQ/N5GWFgT/DQwENHmiH/nO8yDAbI1BiY3jLRly8SOCWCy6sr5kZik
+YeK13OZObiOsQ6Emf9xtsx7RbAYBdAvGTdtKOiH4+/ah3Oth3MVwY3IN6Q15gT4i
+6VV0rAMyS7fXG8y1A6NSh/DGlItL90Xk8s7t6L0+goRuccWv1fHv3OAW9kdmaAIC
+xSgm8r8l/2d/DkTlFuZ3yRzQWblVqxZhsajb6LnssgR9jvJ7DBjaYmkeUGo74UYy
+Ov6nX1ZYhQppWHfrdpuOXwF4E1MOZDEKoydSn0OSJYGmoFZgXQZZlJeE92c67agh
+Yp8XvkSKicE7rWOv3PFFhPY/JQEikmHEOvy19HsBzkWB/MHMKK17h4Zf9KQYemVn
+8eFVDmngqJgzoRWq+xqdavNbp6SBB0KGMQTVI4kaoEY0fRvj/HLj6GEmeRDBkJgX
+nb/skGQ89AIh9NV5Oo2hmIQJdHHzZGPBjMuEzQrCdtem62x/YDAFLA/pnzZYfjdV
+e48x7vsFFQIDAQABoz8wPTAdBgNVHQ4EFgQUNNJsw2Kq+V3Fe+nk0Fsi7JyuMeMw
+DwYDVR0TBAgwBgEB/wIBADALBgNVHQ8EBAMCAQYwDQYJKoZIhvcNAQEMBQADggGB
+AGs7s1WOJ7wPM4Cs3d3O72J29F0zzDJ3mADo4rxi3yf0XbCLwwSYxIqYvC1gZWHd
+UCDlfru4rKDx0Qv6zyt7L5cRyRNkn81Z2+lJA/DjzcF7sI1MXh5C3XdW+PBksRYz
+FVzV5tttNIEP9X4UttykO2pLBt167w46gW/QEHnsOSpdLTmqBxfn65YjpvUApq50
+Ee9S64KLV8tOJpD7xWtQtiktFslo/AugXh/KLPneqdhVJrU/bYOnE/ZeAOL6BF6x
+uPXG8Qb/94Y7CVInCuS5VVJBoTiejSMYk2qDNSJLneeJ2/vS2ETFF89R9GIIbklh
+tutWGeLt6yOpF2KZqAFk313bGaOJWvqksqL5ryuXJyWvKGhdQer/7wSfep/27sEE
+aArACNSjc1cz4++UHmNVXsdf+dA2NnCsuFR8CjxL44cOMKrJK9m7JhkqPwGzI3U/
+VeokzTmQRsqvof2Tev4m/psIWGs0i16DMsNgs1RSXtaR11za+fVadliRes9pCDDM
+ZQ==
+-----END CERTIFICATE-----`;
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
     ssl: process.env.DATABASE_URL?.includes('localhost')
         ? false
         : {
-            rejectUnauthorized: false, // For Aiven/Render production DB
+            rejectUnauthorized: true, // Safety first with CA
+            ca: aivenCa,
         },
-    connectionTimeoutMillis: 5000, // 5 second timeout to avoid hanging
+    connectionTimeoutMillis: 5000,
 });
 
 /**
