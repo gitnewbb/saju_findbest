@@ -6,6 +6,7 @@ interface SajuData {
   birthYear: string;
   birthMonth: string;
   birthDay: string;
+  birthTime: string;
   gender: 'male' | 'female';
 }
 
@@ -19,6 +20,7 @@ export default function SajuForm({ onSubmit, buttonText = "운명 찾기" }: Pro
     birthYear: '1995',
     birthMonth: '5',
     birthDay: '20',
+    birthTime: '13',
     gender: 'male'
   });
 
@@ -47,6 +49,10 @@ export default function SajuForm({ onSubmit, buttonText = "운명 찾기" }: Pro
           <div className={styles.fieldGroup}>
             <label className={styles.label}>일</label>
             <input type="number" name="birthDay" value={formData.birthDay} onChange={handleChange} required className={styles.stylishInput} />
+          </div>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label}>시</label>
+            <input type="number" name="birthTime" value={formData.birthTime} onChange={handleChange} required className={styles.stylishInput} />
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>성별</label>

@@ -6,10 +6,10 @@ import { generateSTierExplanation, generateRomanceAnalysis } from '@/lib/gemini'
 export async function POST(req: Request) {
   try {
     const data = await req.json();
-    const { birthYear, birthMonth, birthDay, rangeYears = 2, needExplanation = false, mode = 'general', targetSajuData = null } = data;
+    const { birthYear, birthMonth, birthDay, birthTime = 12, rangeYears = 2, needExplanation = false, mode = 'general', targetSajuData = null } = data;
 
     // 만세력 계산을 위한 기준일 생성
-    const baseDate = new Date(parseInt(birthYear), parseInt(birthMonth) - 1, parseInt(birthDay), 12, 0, 0);
+    const baseDate = new Date(parseInt(birthYear), parseInt(birthMonth) - 1, parseInt(birthDay), parseInt(birthTime as string), 0, 0);
     const baseSaju = getSajuFromDate(baseDate);
 
     // 1. 연애 분석 전용 요청인 경우 (보안: 유효한 데이터와 특정 티어 조건 확인 권장)
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     // 2. ±N년 완전 탐색 및 파레토 프론트 랭킹
-    const tiers = generateSajuTiers(baseDate, parseInt(rangeYears));
+    const tiers = generateSajuTiers(baseDate, parseInt(rangeYears as string));
 
     // 3. S티어 1위 대상 Gemini 해설 요청 (자동 호출 시 보안 가드)
     let explanation = null;
