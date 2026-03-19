@@ -7,18 +7,24 @@ export default function DbCheckPage() {
 
     useEffect(() => {
         fetch('/api/db/logs', { cache: 'no-store' })
-            .then(res => res.json())
+            .then(async res => {
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${text.slice(0, 100)}`);
+                }
+                return res.json();
+            })
             .then(data => {
                 if (data.success) {
                     setLogs(data.logs);
                 } else {
                     console.error('API Error:', data.error);
-                    alert('로그를 불러오지 못했습니다. DB 초기화 여부를 확인해주세요.');
+                    alert(`DB 오류: ${data.error}`);
                 }
             })
             .catch(err => {
-                console.error('Network Error:', err);
-                alert('서버와 연결할 수 없습니다.');
+                console.error('Network/Parsing Error:', err);
+                alert(`연결 실패: ${err.message}\n(DB 설정이나 Render 환경변수를 확인해주세요)`);
             })
             .finally(() => setLoading(false));
     }, []);

@@ -11,6 +11,11 @@ export default function TrackerPage() {
   const [romanceData, setRomanceData] = useState<Record<number, string>>({});
   const [topExplanation, setTopExplanation] = useState<string | null>(null);
 
+  // 특정 사주 직접 검색용 스테이트
+  const [specDate, setSpecDate] = useState({ year: '1995', month: '1', day: '1', time: '12' });
+  const [specResult, setSpecResult] = useState<any>(null);
+  const [specLoading, setSpecLoading] = useState(false);
+
   // 총평 데이터를 위한 통계 계산 (운명 브리핑 강화)
   const getSummary = () => {
     if (results.length === 0) return null;
@@ -102,6 +107,35 @@ export default function TrackerPage() {
       alert('운명 시뮬레이션 중 오류가 발생했습니다.');
     } finally {
       setRomanceLoading(null);
+    }
+  };
+
+  const handleSpecificSearch = async () => {
+    if (!formData) return;
+    setSpecLoading(true);
+    setSpecResult(null);
+    try {
+      const response = await fetch('/api/saju', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ...formData,
+          mode: 'specific_search',
+          targetSajuData: specDate
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        const found = results.findIndex(r =>
+          new Date(r.date).toISOString().split('T')[0] === new Date(data.result.date).toISOString().split('T')[0] &&
+          new Date(r.date).getHours() === new Date(data.result.date).getHours()
+        );
+        setSpecResult({ ...data.result, rank: found !== -1 ? found + 1 : null });
+      }
+    } catch (e) {
+      alert('검색 중 오류가 발생했습니다.');
+    } finally {
+      setSpecLoading(false);
     }
   };
 
@@ -225,6 +259,77 @@ export default function TrackerPage() {
             </div>
           )}
 
+          {/* 특정 사주 직접 확인하기 */}
+          <div style={{
+            backgroundColor: 'var(--surface)',
+            borderRadius: '24px',
+            padding: '2rem',
+            boxShadow: 'var(--shadow-md)',
+            border: '1px solid var(--border)',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '1.5rem'
+          }}>
+            <h3 style={{ fontSize: '1.2rem', fontWeight: '800', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              🔍 궁금한 인연 직접 확인
+            </h3>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem' }}>
+              <input type="number" placeholder="년" value={specDate.year} onChange={e => setSpecDate(p => ({ ...p, year: e.target.value }))} style={inputStyle} />
+              <input type="number" placeholder="월" value={specDate.month} onChange={e => setSpecDate(p => ({ ...p, month: e.target.value }))} style={inputStyle} />
+              <input type="number" placeholder="일" value={specDate.day} onChange={e => setSpecDate(p => ({ ...p, day: e.target.value }))} style={inputStyle} />
+              <input type="number" placeholder="시(0-23)" value={specDate.time} onChange={e => setSpecDate(p => ({ ...p, time: e.target.value }))} style={inputStyle} />
+            </div>
+            <button
+              onClick={handleSpecificSearch}
+              disabled={specLoading}
+              className="premiumBtn"
+              style={{ margin: 0, padding: '0.8rem' }}
+            >
+              {specLoading ? '운명 대조 중...' : '이 분과의 궁합은?'}
+            </button>
+
+            {specResult && (
+              <div style={{
+                marginTop: '1rem',
+                padding: '1.5rem',
+                backgroundColor: 'var(--background)',
+                borderRadius: '18px',
+                border: '1px solid var(--border)',
+                animation: 'fadeIn 0.5s ease-out'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+                  <span style={{ fontWeight: '800', fontSize: '1.1rem' }}>{new Date(specResult.date).getFullYear()}년생 확인 결과</span>
+                  {specResult.rank ? (
+                    <span style={{ backgroundColor: 'var(--primary)', color: '#fff', padding: '4px 10px', borderRadius: '8px', fontSize: '0.8rem' }}>
+                      전체 {specResult.rank}위 탐지됨
+                    </span>
+                  ) : (
+                    <span style={{ backgroundColor: 'var(--text-muted)', color: '#fff', padding: '4px 10px', borderRadius: '8px', fontSize: '0.8rem' }}>
+                      숨겨진 인연 영역
+                    </span>
+                  )}
+                </div>
+
+                <p style={{ fontSize: '0.95rem', lineHeight: '1.7', color: 'var(--text)' }}>
+                  {specResult.rank ? (
+                    <>이미 탐색된 상위권 운명 리스트에 포함되어 있는 인연입니다! </>
+                  ) : (
+                    <>
+                      이 분과는 우주의 기운이 다소 특별한 방식으로 흐르고 있네요.<br />
+                      <span style={{ color: 'var(--accent)', fontWeight: '800' }}>
+                        "우주가 잠시 숨겨둔, 당신만이 알아볼 수 있는 특별한 실마리일지도 모릅니다."
+                      </span><br />
+                      표면적인 점수 너머의 깊은 인연의 끈을 느껴보세요.
+                    </>
+                  )}
+                </p>
+                <div style={{ marginTop: '1rem', fontSize: '0.85rem', opacity: 0.7 }}>
+                  오행 성분: {specResult.sajuChars.gan.join('')} {specResult.sajuChars.zhi.join('')}
+                </div>
+              </div>
+            )}
+          </div>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
               <h3 style={{ fontSize: '1.2rem', fontWeight: '700' }}>탐색된 운명 결과</h3>
@@ -318,3 +423,13 @@ export default function TrackerPage() {
     </main>
   );
 }
+
+const inputStyle = {
+  backgroundColor: 'var(--background)',
+  border: '1px solid var(--border)',
+  borderRadius: '8px',
+  padding: '0.6rem',
+  color: 'var(--text)',
+  outline: 'none',
+  fontSize: '0.9rem'
+};

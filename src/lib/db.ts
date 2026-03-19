@@ -1,10 +1,14 @@
 import { Pool } from 'pg';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
-    ssl: {
-        rejectUnauthorized: false // Aiven typically requires SSL
-    }
+    ssl: process.env.DATABASE_URL?.includes('localhost')
+        ? false
+        : {
+            rejectUnauthorized: false, // For Aiven/Render production DB
+        }
 });
 
 /**
