@@ -8,6 +8,7 @@ interface SajuData {
   birthDay: string;
   birthTime: string;
   gender: 'male' | 'female';
+  rangeYears: string;
 }
 
 interface Props {
@@ -21,7 +22,8 @@ export default function SajuForm({ onSubmit, buttonText = "운명 찾기" }: Pro
     birthMonth: '5',
     birthDay: '20',
     birthTime: '13',
-    gender: 'male'
+    gender: 'male',
+    rangeYears: '2'
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -53,6 +55,10 @@ export default function SajuForm({ onSubmit, buttonText = "운명 찾기" }: Pro
           <div className={styles.fieldGroup}>
             <label className={styles.label}>시</label>
             <input type="number" name="birthTime" value={formData.birthTime} onChange={handleChange} required className={styles.stylishInput} />
+          </div>
+          <div className={styles.fieldGroup}>
+            <label className={styles.label}>탐색 범위 (본인 나이 기준 위아래 N년)</label>
+            <input type="number" name="rangeYears" value={formData.rangeYears} onChange={handleChange} required className={styles.stylishInput} />
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>성별</label>
